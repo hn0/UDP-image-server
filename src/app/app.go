@@ -1,10 +1,48 @@
 package main
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"net"
 	"os"
 )
+
+type req struct {
+	width  uint32
+	height uint32
+	fname  []byte
+}
+
+var buffsz int = 2048
+
+func response(conn *net.UDPConn, sender *net.UDPAddr) {
+	conn.WriteToUDP([]byte("Not implemented yet!"), sender)
+}
+
+func recive(conn *net.UDPConn) {
+	buff := make([]byte, buffsz)
+
+	for {
+		n, sender, err := conn.ReadFromUDP(buff)
+		if err == nil {
+			defer func() {
+				response(conn, sender)
+				if r := recover(); r != nil {
+					fmt.Println("Invalid request detected!")
+					recive(conn)
+				}
+			}()
+			// fmt.Println("Got: ", n)
+			req := req{}
+			b := bytes.NewReader(buff)
+			binary.Read(b, binary.BigEndian, &req.width)
+			binary.Read(b, binary.BigEndian, &req.height)
+			req.fname = buff[8:n]
+			fmt.Println(req)
+		}
+	}
+}
 
 func main() {
 
@@ -20,19 +58,6 @@ func main() {
 		os.Exit(1)
 	}
 	defer conn.Close()
+	recive(conn)
 
-	buf := make([]byte, 1024)
-
-	for {
-		n, sender, err := conn.ReadFromUDP(buf)
-		if err != nil {
-			fmt.Println("Error in receiving bytes", err)
-		} else {
-			fmt.Println("Got the: " + string(buf[0:n]))
-		}
-
-		conn.WriteToUDP([]byte("Not implemented yet!"), sender)
-	}
-
-	fmt.Println("ready to start coding!", addr)
 }
