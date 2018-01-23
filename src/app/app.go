@@ -24,12 +24,14 @@ func main() {
 	buf := make([]byte, 1024)
 
 	for {
-		n, _, err := conn.ReadFromUDP(buf)
+		n, sender, err := conn.ReadFromUDP(buf)
 		if err != nil {
 			fmt.Println("Error in receiving bytes", err)
 		} else {
 			fmt.Println("Got the: " + string(buf[0:n]))
 		}
+
+		conn.WriteToUDP([]byte("Not implemented yet!"), sender)
 	}
 
 	fmt.Println("ready to start coding!", addr)
