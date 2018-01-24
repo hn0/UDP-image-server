@@ -15,7 +15,7 @@ function println( $msg ) {
 
 
 
-$tst_path = getcwd() . '../winsock_test/test_img/DJI_0510.JPG';
+$tst_path = getcwd() . '/../winsock_test/test_img/DJI_0510.JPG';
 
 if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0) ) ){
 
@@ -31,11 +31,15 @@ if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0) ) ){
     println( $reqmsg );
 
     $response;
-    $respmsg = 'listening server response ... ';
-    $res = socket_recv( $sock, $response, 2048, MSG_WAITALL ) === FALSE;
-    $respmsg .= ($res) ? 'OK' : 'error';
-    println( $respmsg );
-    println( $response );
+    println( 'listening server response ... ' );
+    socket_recv( $sock, $response, 2048, MSG_WAITALL );
+    if( $response == '-1' ){
+        println( 'got -1 response' );
+    }
+    else {
+        println( $response );    
+    }
+    
 }
 
 
