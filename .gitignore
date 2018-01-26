@@ -1,3 +1,4 @@
 bin
 src/gopkg.in/
 pkg
+test_results

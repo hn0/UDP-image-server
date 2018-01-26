@@ -27,6 +27,9 @@ func response(conn *net.UDPConn, sender *net.UDPAddr, data []byte) {
 			break
 		}
 	}
+	if DEBUG {
+		log.Println("Resp. successfully sent to:", sender)
+	}
 }
 
 func recive(conn *net.UDPConn) {
@@ -55,6 +58,10 @@ func recive(conn *net.UDPConn) {
 			binary.Read(b, binary.BigEndian, &img.Thight)
 			img.File = ROOT + string(buff[8:n])
 
+			if DEBUG {
+				log.Println("Img request:", img)
+			}
+
 			if blob := img.Resize(); blob != nil {
 				go response(conn, sender, blob)
 			} else {
@@ -74,6 +81,9 @@ func main() {
 	}
 
 	ROOT = os.Args[1]
+	if DEBUG {
+		log.Println("Operating in:", ROOT)
+	}
 
 	addr, err := net.ResolveUDPAddr("udp", ":20000")
 	if err != nil {

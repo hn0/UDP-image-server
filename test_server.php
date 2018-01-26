@@ -13,9 +13,13 @@ function println( $msg ) {
     print( $msg . "\n" );
 }
 
-
-
 $tst_path = '/test_img/DJI_0510.JPG';
+$out_path = 'test.jpg';
+
+if( defined('STDIN') && sizeof($argv) > 1 ){
+    $out_path = $argv[1];    
+}
+
 
 if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0) ) ){
 
@@ -34,18 +38,14 @@ if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0) ) ){
     $response;
     println( 'listening server response ... ' );
     while( ( $bytes = socket_recv( $sock, $response, 2048, MSG_WAITALL ) ) == 2048 ){
-        // println( $bytes );
-        // println( $response );
         $image .=  $response;
     };
     if( $response == '-1' ){
         println( 'got -1 response' );
     }
     else {
-        // println( $response );
         println( 'done' );
-        file_put_contents('test.jpg', $image);
-        // file_put_contents('test.jpg', $response);
+        file_put_contents('test_results/' . $out_path, $image);
     }
     
 }
