@@ -13,3 +13,4 @@ export GOOS=windows
 export GOARCH=amd64
 
 go build -v -x -o bin/server.exe src/app/app.go
+
