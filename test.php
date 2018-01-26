@@ -7,7 +7,7 @@
 
 define( 'SERVER', 'localhost' );
 define( 'PORT', 20000 );
-define( 'THUMB_WIDTH', 200 );
+define( 'THUMB_WIDTH', 800 );
 
 function println( $msg ) {
     print( $msg . "\n" );
@@ -15,7 +15,7 @@ function println( $msg ) {
 
 
 
-$tst_path = getcwd() . '/../winsock_test/test_img/DJI_0510.JPG';
+$tst_path = '/test_img/DJI_0510.JPG';
 
 if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0) ) ){
 
@@ -30,14 +30,22 @@ if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0) ) ){
     $reqmsg .= ($res) ? 'OK' : 'error';
     println( $reqmsg );
 
+    $image = '';
     $response;
     println( 'listening server response ... ' );
-    socket_recv( $sock, $response, 2048, MSG_WAITALL );
+    while( ( $bytes = socket_recv( $sock, $response, 2048, MSG_WAITALL ) ) == 2048 ){
+        // println( $bytes );
+        // println( $response );
+        $image .=  $response;
+    };
     if( $response == '-1' ){
         println( 'got -1 response' );
     }
     else {
-        println( $response );    
+        // println( $response );
+        println( 'done' );
+        file_put_contents('test.jpg', $image);
+        // file_put_contents('test.jpg', $response);
     }
     
 }
