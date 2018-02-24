@@ -32,6 +32,10 @@ func (i *Image) Resize() []byte {
 		log.Panic("Error resizing image!", err)
 	}
 
+	if i.Enhance > 0 {
+		mw.AutoLevelImage()
+	}
+
 	mw.SetImageCompressionQuality(95)
 	return mw.GetImageBlob()
 }
