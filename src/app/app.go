@@ -56,7 +56,13 @@ func recive(conn *net.UDPConn) {
 			b := bytes.NewReader(buff)
 			binary.Read(b, binary.BigEndian, &img.Twidth)
 			binary.Read(b, binary.BigEndian, &img.Thight)
-			img.File = ROOT + string(buff[8:n])
+			binary.Read(b, binary.BigEndian, &img.Ttop)
+			binary.Read(b, binary.BigEndian, &img.Tleft)
+			binary.Read(b, binary.BigEndian, &img.Toffx)
+			binary.Read(b, binary.BigEndian, &img.Toffy)
+			binary.Read(b, binary.BigEndian, &img.Enhance)
+
+			img.File = ROOT + string(buff[25:n])
 
 			if DEBUG {
 				log.Println("Img request:", img)

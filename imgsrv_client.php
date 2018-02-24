@@ -21,18 +21,18 @@ class NetImage
         $this->log_fnc = $log_fnc;
     }
 
-    public function GetImage( $path, $w, $h )
+    public function GetImage( $path, $w, $h, $trim, $contrast )
     {
         if( ($sock = socket_create( AF_INET, SOCK_DGRAM, 0)) ) {
             $this->log( sprintf( 'Server msg: w:%d, h:%d, path:%s', $w, $h, $path ) );
-            $msg = pack( 'NN', $w, $h ) . $path;
+            $msg = pack( 'NNNNNNC', $w, $h, $trim[0], $trim[1], $trim[2], $trim[3], $contrast ) . $path;
             if( socket_sendto( $sock, $msg, strlen($msg), 0, $this->server, $this->port ) ){
             $this->log( sprintf( 'Socket is open now. Sending msg to: to %s:%s', $this->server, $this->port ) );
                 $bytes;
                 while( socket_recv( $sock, $bytes, self::$IMG_BUFF, MSG_WAITALL ) == self::$IMG_BUFF ){
                     $this->image .= $bytes;
                 }
-                if( $this->image && $this->image != -1 ){
+                if( $this->image && $this->image != "-1" ){
                     $this->log( sprintf( 'Got response of size:', strlen($this->image) ) );
                 }
                 else{

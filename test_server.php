@@ -25,9 +25,12 @@ if( defined('STDIN') && sizeof($argv) > 2 ){
     $out_path = $argv[2];    
 }
 
+$trim = [200,200,750,750];
+$contrast = 1;
+
 $netimage = new NetImage( SERVER, PORT, println );
 $start = microtime(true);
-if( $netimage->GetImage( $tst_path, THUMB_WIDTH, THUMB_WIDTH * .75 ) ){
+if( $netimage->GetImage( $tst_path, THUMB_WIDTH, THUMB_WIDTH * .75, $trim, $contrast ) ){
     file_put_contents('test_results/' . $out_path, $netimage->Blob() );
 }
 
