@@ -33,7 +33,12 @@ func (i *Image) Resize() []byte {
 	}
 
 	if i.Enhance > 0 {
-		mw.AutoLevelImage()
+		if e := mw.AutoGammaImage(); e != nil {
+			log.Println("Auto gamma adj fail")
+		}
+		if e := mw.AutoLevelImage(); e != nil {
+			log.Println("Auto lvl adj fail")
+		}
 	}
 
 	mw.SetImageCompressionQuality(95)
